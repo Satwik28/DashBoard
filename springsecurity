@@ -1,0 +1,65 @@
+@Configuration
+@EnableWebSecurity
+public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter{
+
+private final PasswordEncoder passwordEncoder;
+
+public ApplicationSecurityConfiguration(PasswordEncoder passwordEncoder) {
+		super();
+		this.passwordEncoder = passwordEncoder;
+	}
+  
+  @Override
+	protected void configure(HttpSecurity http) throws Exception {
+  http.csrf().disable().authorizeRequests()
+  .antMatchers("/","index").permitAll()
+  .anyRequest().authenticated().and()
+  .formLogin()
+  .loginPage("/login").permitAll();
+  
+
+
+
+}
+
+
+******************************************SESSION ID************************************************************
+
+
+  @Override
+	protected void configure(HttpSecurity http) throws Exception {
+  http.csrf().disable().authorizeRequests()
+  .antMatchers("/","index").permitAll()
+  .anyRequest().authenticated().and()
+  .formLogin()
+  .loginPage("/login").permitAll()
+  .defaultSuccessUrl("/courses", true)
+  .and()
+  .rememberMe();
+
+
+Remember me and extend session :
+	.formLogin()
+		  .loginPage("/login").permitAll()
+		  .defaultSuccessUrl("/courses", true)
+		  .and().rememberMe().tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
+		  .key("someSecret");
+
+
+}
+
+---------------------------------------------form based complete --------------------------------------------------------------------
+
+
+1) Add dependency in the project
+ 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    
+   2) run the application
+   3)In console window : Using generated security password: 30fa180f-cdbd-4368-858c-824b7b024488  password will get generated username is user(default)
+   4) default when we try to send request: Request is redirected to http://localhost:8100/login
+   5) try http://localhost:8100/logout
+   
